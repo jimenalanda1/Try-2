@@ -1,31 +1,14 @@
-name: Run Flight Deal Scraper
+name: Debug GitHub Actions
 
 on:
-  schedule:
-    - cron: "0 * * * *"  # Runs every hour
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
-  scrape:
+  debug:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run scraper
-        run: node scraper.js
-
-      - name: Commit and push updated flight deals
-        run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git add flights.json
-          git commit -m "Updated flight deals" || echo "No changes to commit"
-          git push
+      - name: Show folder structure
+        run: ls -R $GITHUB_WORKSPACE
