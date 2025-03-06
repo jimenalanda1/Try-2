@@ -11,6 +11,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Set working directory manually
+        run: echo "WORKDIR=$(pwd)" >> $GITHUB_ENV
+
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
@@ -18,11 +21,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ env.WORKDIR }}
 
       - name: Run scraper
         run: node scraper.js
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ env.WORKDIR }}
 
       - name: Commit and push updated flight deals
         run: |
@@ -31,3 +34,4 @@ jobs:
           git add flights.json
           git commit -m "Updated flight deals" || echo "No changes to commit"
           git push
+        working-directory: ${{ env.WORKDIR }}
