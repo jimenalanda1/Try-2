@@ -18,10 +18,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ${{ github.workspace }}
 
       - name: Run scraper
-        working-directory: ${{ github.workspace }}
         run: node scraper.js
+        working-directory: ${{ github.workspace }}
 
       - name: Commit and push updated flight deals
         run: |
