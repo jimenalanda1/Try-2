@@ -1,45 +1,9 @@
-name: Run Flight Deal Scraper
-
-on:
-  workflow_dispatch:  # Allows manual triggering
-  schedule:
-    - cron: "0 * * * *"  # Runs every hour
-
-jobs:
-  scrape:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Fix directory issue
-        run: |
-          if [ -d "$GITHUB_WORKSPACE/Try-2" ]; then
-            mv $GITHUB_WORKSPACE/Try-2/* $GITHUB_WORKSPACE/
-            rm -rf $GITHUB_WORKSPACE/Try-2
-          fi
-
-      - name: Show file structure
-        run: ls -R
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: $GITHUB_WORKSPACE
-
-      - name: Run scraper
-        run: node scraper.js
-        working-directory: $GITHUB_WORKSPACE
-
       - name: Commit and push updated flight deals
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
           git add flights.json
           git commit -m "Updated flight deals" || echo "No changes to commit"
-          git push
-        working-directory: $GITHUB_WORKSPACE
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/jimenalanda1/Try-2.git main
